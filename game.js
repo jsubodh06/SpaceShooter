@@ -1,189 +1,160 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Resize canvas for any screen
+// Responsive canvas
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
 // Player
-let player = {
-    x: canvas.width / 2 - 20,
+const player = {
+    x: canvas.width / 2,
     y: canvas.height - 80,
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 20,
     speed: 6
 };
 
-let bullets = [];
-let enemies = [];
-let score = 0;
-let gameOver = false;
-
-// Input states
+// Controls
 let leftPressed = false;
 let rightPressed = false;
+let shooting = false;
 
-// --- KEYBOARD CONTROLS ---
+// Bullets
+let bullets = [];
+const bulletSpeed = 8;
+
+// Balloons
+let balloons = [];
+const balloonSpeed = 2; // slower falling speed
+const balloonInterval = 1500; // spawn time
+
+function createBalloon() {
+    balloons.push({
+        x: Math.random() * (canvas.width - 40),
+        y: -40,
+        size: 40
+    });
+}
+setInterval(createBalloon, balloonInterval);
+
+// Keyboard controls
 document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") leftPressed = true;
     if (e.key === "ArrowRight") rightPressed = true;
-    if (e.key === " " || e.key === "ArrowUp") shootBullet();
+    if (e.key === " ") shooting = true;
 });
-
 document.addEventListener("keyup", (e) => {
     if (e.key === "ArrowLeft") leftPressed = false;
     if (e.key === "ArrowRight") rightPressed = false;
+    if (e.key === " ") shooting = false;
 });
 
-// --- TOUCH CONTROLS ---
-let leftTouch = false;
-let rightTouch = false;
+// Mobile button events
+document.getElementById("leftBtn").addEventListener("mousedown", () => leftPressed = true);
+document.getElementById("leftBtn").addEventListener("mouseup", () => leftPressed = false);
 
-// Create on-screen buttons
-function createTouchControls() {
-    const controls = document.createElement("div");
-    controls.style.position = "fixed";
-    controls.style.bottom = "20px";
-    controls.style.left = "0";
-    controls.style.width = "100%";
-    controls.style.display = "flex";
-    controls.style.justifyContent = "space-around";
-    controls.style.zIndex = "10";
-    controls.style.userSelect = "none";
+document.getElementById("rightBtn").addEventListener("mousedown", () => rightPressed = true);
+document.getElementById("rightBtn").addEventListener("mouseup", () => rightPressed = false);
 
-    const btnStyle = `
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 20px 30px;
-        font-size: 22px;
-        border-radius: 10px;
-        border: 2px solid white;
-        touch-action: none;
-    `;
+document.getElementById("fireBtn").addEventListener("mousedown", () => shooting = true);
+document.getElementById("fireBtn").addEventListener("mouseup", () => shooting = false);
 
-    const leftBtn = document.createElement("button");
-    leftBtn.innerText = "⟵";
-    leftBtn.style.cssText = btnStyle;
-    leftBtn.addEventListener("touchstart", () => (leftTouch = true));
-    leftBtn.addEventListener("touchend", () => (leftTouch = false));
+// Mobile touch support
+["touchstart"].forEach(evt => {
+    document.getElementById("leftBtn").addEventListener(evt, () => leftPressed = true);
+    document.getElementById("rightBtn").addEventListener(evt, () => rightPressed = true);
+    document.getElementById("fireBtn").addEventListener(evt, () => shooting = true);
+});
+["touchend"].forEach(evt => {
+    document.getElementById("leftBtn").addEventListener(evt, () => leftPressed = false);
+    document.getElementById("rightBtn").addEventListener(evt, () => rightPressed = false);
+    document.getElementById("fireBtn").addEventListener(evt, () => shooting = false);
+});
 
-    const fireBtn = document.createElement("button");
-    fireBtn.innerText = "🔥";
-    fireBtn.style.cssText = btnStyle;
-    fireBtn.addEventListener("touchstart", shootBullet);
+// Shoot continuously
+setInterval(() => {
+    if (shooting) {
+        bullets.push({
+            x: player.x + player.width / 2 - 3,
+            y: player.y,
+            width: 6,
+            height: 12
+        });
+    }
+}, 200);
 
-    const rightBtn = document.createElement("button");
-    rightBtn.innerText = "⟶";
-    rightBtn.style.cssText = btnStyle;
-    rightBtn.addEventListener("touchstart", () => (rightTouch = true));
-    rightBtn.addEventListener("touchend", () => (rightTouch = false));
-
-    controls.appendChild(leftBtn);
-    controls.appendChild(fireBtn);
-    controls.appendChild(rightBtn);
-    document.body.appendChild(controls);
+// Collision detection
+function isColliding(a, b) {
+    return a.x < b.x + b.size &&
+           a.x + a.width > b.x &&
+           a.y < b.y + b.size &&
+           a.y + a.height > b.y;
 }
 
-// Only create buttons if on mobile
-if (/Mobi|Android/i.test(navigator.userAgent)) {
-    createTouchControls();
-}
+let score = 0;
 
-function shootBullet() {
-    bullets.push({
-        x: player.x + player.width / 2 - 2,
-        y: player.y
+// Game loop
+function update() {
+    // Movement
+    if (leftPressed) player.x -= player.speed;
+    if (rightPressed) player.x += player.speed;
+
+    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+
+    // Bullets update
+    bullets.forEach((b, i) => {
+        b.y -= bulletSpeed;
+        if (b.y < 0) bullets.splice(i, 1);
     });
-}
 
-function drawPlayer() {
-    ctx.fillStyle = "cyan";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-}
+    // Balloons update
+    balloons.forEach((bl, i) => {
+        bl.y += balloonSpeed;
 
-function drawBullets() {
-    ctx.fillStyle = "yellow";
-    bullets.forEach((bullet, index) => {
-        bullet.y -= 7;
-        ctx.fillRect(bullet.x, bullet.y, 5, 10);
-        if (bullet.y < 0) bullets.splice(index, 1);
-    });
-}
+        if (bl.y > canvas.height) {
+            balloons.splice(i, 1);
+        }
 
-function createEnemy() {
-    enemies.push({
-        x: Math.random() * (canvas.width - 30),
-        y: -30,
-        width: 30,
-        height: 30,
-        speed: 1 + Math.random() * 1.5
-    });
-}
-
-function drawEnemies() {
-    ctx.fillStyle = "red";
-    enemies.forEach((enemy, eIndex) => {
-        enemy.y += enemy.speed;
-        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-
-        if (enemy.y > canvas.height) gameOver = true;
-
-        bullets.forEach((bullet, bIndex) => {
-            if (
-                bullet.x < enemy.x + enemy.width &&
-                bullet.x + 5 > enemy.x &&
-                bullet.y < enemy.y + enemy.height &&
-                bullet.y + 10 > enemy.y
-            ) {
+        bullets.forEach((b, j) => {
+            if (isColliding(b, bl)) {
+                balloons.splice(i, 1);
+                bullets.splice(j, 1);
                 score++;
-                enemies.splice(eIndex, 1);
-                bullets.splice(bIndex, 1);
             }
         });
     });
 }
 
-function showScore() {
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score: " + score, 10, 30);
-}
-
-function showGameOver() {
-    ctx.fillStyle = "white";
-    ctx.font = "40px Arial";
-    ctx.fillText("GAME OVER!", canvas.width / 2 - 130, canvas.height / 2);
-    ctx.font = "20px Arial";
-    ctx.fillText("Refresh to restart", canvas.width / 2 - 90, canvas.height / 2 + 40);
-}
-
-function gameLoop() {
-    if (gameOver) {
-        showGameOver();
-        return;
-    }
-
+function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawPlayer();
-    drawBullets();
-    drawEnemies();
-    showScore();
+    // Player
+    ctx.fillRect(player.x, player.y, player.width, player.height);
 
-    // Desktop movement
-    if (leftPressed && player.x > 0) player.x -= player.speed;
-    if (rightPressed && player.x < canvas.width - player.width) player.x += player.speed;
+    // Bullets
+    bullets.forEach(b => {
+        ctx.fillRect(b.x, b.y, b.width, b.height);
+    });
 
-    // Touch movement
-    if (leftTouch && player.x > 0) player.x -= player.speed;
-    if (rightTouch && player.x < canvas.width - player.width) player.x += player.speed;
+    // Balloons
+    balloons.forEach(bl => {
+        ctx.beginPath();
+        ctx.arc(bl.x + 20, bl.y + 20, bl.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+    });
 
-    requestAnimationFrame(gameLoop);
+    // Score
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + score, 20, 40);
 }
 
-setInterval(createEnemy, 1200);
-gameLoop();
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+loop();
