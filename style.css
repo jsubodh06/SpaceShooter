@@ -1,18 +1,5 @@
-body {
-    margin: 0;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-#gameCanvas {
-    background: #111;
-    border: 2px solid white;
-}
-
- #controls {
+<style>
+  #controls {
     position: fixed;
     bottom: 20px;
     width: 100%;
@@ -25,4 +12,4 @@ body {
     padding: 15px;
     border-radius: 15px;
   }
-
+</style>
