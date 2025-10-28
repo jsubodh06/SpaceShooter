@@ -11,3 +11,18 @@ body {
     background: #111;
     border: 2px solid white;
 }
+
+ #controls {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #controls button {
+    font-size: 40px;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
