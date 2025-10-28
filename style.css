@@ -1,15 +1,28 @@
-<style>
-  #controls {
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#gameCanvas {
+    background: #111;
+    display: block;
+}
+
+#controls {
     position: fixed;
     bottom: 20px;
     width: 100%;
     display: flex;
     justify-content: space-around;
-  }
+    pointer-events: auto;
+}
 
-  #controls button {
+#controls button {
     font-size: 40px;
-    padding: 15px;
-    border-radius: 15px;
-  }
-</style>
+    padding: 18px 28px;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
