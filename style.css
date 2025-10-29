@@ -1,102 +1,54 @@
-/* Reset */
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  touch-action: none; /* prevent scroll during game */
+  background: #87CEEB;
+  height: 100vh;
   overflow: hidden;
+  font-family: Arial, sans-serif;
 }
 
-/* Game Box (fixed height) */
 #gameContainer {
-  position: relative;
-  width: 100vw;
-  height: 70vh; /* ✅ Box Area */
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 #gameCanvas {
+  background: #fff;
   width: 100%;
-  height: 100%;
-  background: #111;
-  pointer-events: none; /* fire button must work */
+  max-width: 600px;
+  height: auto;
+  aspect-ratio: 3/4;
+  border: 2px solid black;
 }
 
-/* Score + Restart */
-#uiTop {
-  position: absolute;
-  top: 5px;
-  width: 100%;
-  text-align: center;
-  z-index: 20;
-  pointer-events: none;
-}
-
-#scoreText {
-  color: #fff;
-  font-size: 4vw;
-  font-weight: bold;
-}
-
-#restartBtn {
-  background: #ffc400;
-  border: none;
-  padding: 8px 15px;
-  margin-top: 10px;
-  border-radius: 10px;
-  font-size: 4vw;
-  cursor: pointer;
-  display: none;
-  pointer-events: auto;
-}
-
-/* Controls Row under the game box */
 #controls {
-  width: 100vw;
-  height: 30vh; /* ✅ Space for buttons */
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 6vw;
+  gap: 20px;
+  padding: 15px;
   background: #222;
 }
 
-#controls button {
-  width: 24vw;
-  height: 12vw;
-  font-size: 5vw;
-  background: #444;
-  color: #fff;
+button {
+  font-size: 20px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 12px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  background: orange;
+  color: #000;
 }
 
-#controls button:active {
-  background: #666;
+button:active {
+  background: #ff6600;
 }
 
-/* ✅ Desktop + Tablets */
 @media (min-width: 768px) {
-  #scoreText {
-    font-size: 26px;
-  }
-
-  #restartBtn {
-    font-size: 18px;
-  }
-
-  #controls button {
-    width: 110px;
-    height: 60px;
-    font-size: 20px;
+  button {
+    font-size: 16px;
+    padding: 10px 15px;
   }
 }
