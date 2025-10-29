@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Balloon Shooter Game</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8" />
+    <title>Balloon Shooter — Carnival</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <canvas id="gameCanvas"></canvas>
 
-<canvas id="gameCanvas"></canvas>
+    <div id="uiTop">
+        <div id="scoreBox">Score: <span id="score">0</span></div>
+        <div id="livesBox">Lives: <span id="lives">3</span></div>
+    </div>
 
-<div id="controls">
-    <button id="leftBtn">⬅️</button>
-    <button id="fireBtn">🔥</button>
-    <button id="rightBtn">➡️</button>
-</div>
+    <div id="controls">
+        <button id="leftBtn" aria-label="Left">⬅️</button>
+        <button id="fireBtn" aria-label="Fire">🔥</button>
+        <button id="rightBtn" aria-label="Right">➡️</button>
+    </div>
 
-<script src="game.js"></script>
+    <div id="overlay" class="hidden">
+        <div id="overlayContent">
+            <h1 id="overlayTitle">GAME OVER</h1>
+            <p id="overlayScore">Score: 0</p>
+            <button id="restartBtn">Restart</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
 </body>
 </html>
