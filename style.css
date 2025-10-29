@@ -1,28 +1,90 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+/* Basic reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; }
+
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(#87CEEB 0%, #bfe9ff 100%); /* sky */
+  overflow: hidden;
+  touch-action: none; /* important for mobile controls */
 }
 
+/* Canvas fills viewport */
 #gameCanvas {
-    background: #111;
-    display: block;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(0,0,0,0.02));
 }
 
+/* Top UI (score + lives) */
+#uiTop {
+  position: fixed;
+  left: 16px;
+  top: 12px;
+  display: flex;
+  gap: 16px;
+  z-index: 30;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+#scoreBox, #livesBox {
+  background: rgba(0,0,0,0.25);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* Controls at bottom */
 #controls {
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    pointer-events: auto;
+  position: fixed;
+  bottom: 18px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 30;
+  pointer-events: auto;
 }
-
 #controls button {
-    font-size: 40px;
-    padding: 18px 28px;
-    background: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
+  background: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  padding: 12px 18px;
+  font-size: 36px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#controls button:active { transform: translateY(2px); }
+
+/* Overlay for Game Over */
+#overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 60;
+}
+#overlay.hidden { display: none; }
+#overlayContent {
+  background: #fff;
+  padding: 26px 28px;
+  border-radius: 14px;
+  text-align: center;
+  width: min(380px, 92%);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+#overlayContent h1 { margin-bottom: 12px; color: #333; }
+#overlayContent p { margin-bottom: 18px; color: #555; font-weight: 600; }
+#overlayContent button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
 }
