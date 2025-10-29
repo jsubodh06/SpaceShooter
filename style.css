@@ -1,29 +1,31 @@
+/* Reset + fullscreen setup */
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden; /* Prevent scrolling */
   background: #000;
-  touch-action: none; /* Disable pinch/zoom & page scroll */
+  touch-action: none; /* Block zoom & scroll during gameplay */
 }
 
-/* Game Canvas */
+/* Game canvas */
 #gameCanvas {
   display: block;
   width: 100vw;
   height: 100vh;
   background: #222;
-  pointer-events: none; /* Prevent canvas blocking touches */
+  pointer-events: none; /* Canvas doesn't steal touch clicks */
 }
 
-/* Floating UI (Score / Restart Button) */
+/* Top UI: Score + Restart */
 #uiTop {
   position: absolute;
   top: 10px;
   width: 100%;
   text-align: center;
   z-index: 100;
-  pointer-events: none; /* Text is not interactive */
+  pointer-events: none; /* Non-interactive */
 }
 
 #scoreText {
@@ -32,7 +34,6 @@ html, body {
   font-weight: bold;
 }
 
-/* Restart Button */
 #restartBtn {
   background: #ffcc00;
   border: none;
@@ -45,7 +46,7 @@ html, body {
   pointer-events: auto; /* Clickable */
 }
 
-/* Controls Area */
+/* Mobile-first control buttons */
 #controls {
   position: absolute;
   bottom: 20px;
@@ -57,7 +58,6 @@ html, body {
   pointer-events: auto;
 }
 
-/* Button Styles */
 #controls button {
   width: 25vw;
   height: 15vw;
@@ -69,13 +69,32 @@ html, body {
   font-weight: bold;
   cursor: pointer;
 
-  /* ✅ ENABLES ALL TOUCH ACTIONS */
+  /* Enable all touch presses */
   touch-action: manipulation;
-
-  /* ✅ Fast touch response (remove 300ms delay) */
   -webkit-tap-highlight-color: transparent;
 }
 
 #controls button:active {
   background: #666;
+}
+
+/* ✅ Desktop optimization */
+@media (min-width: 768px) {
+  #scoreText {
+    font-size: 30px;
+  }
+
+  #restartBtn {
+    font-size: 20px;
+  }
+
+  #controls button {
+    width: 120px;
+    height: 70px;
+    font-size: 22px;
+  }
+
+  #controls {
+    bottom: 40px;
+  }
 }
