@@ -1,13 +1,14 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 360;
-canvas.height = 480;
+// Set canvas dimensions dynamically based on the container
+canvas.width = Math.min(360, window.innerWidth * 0.9);
+canvas.height = canvas.width * (4 / 3);
 
 let gunX = canvas.width / 2 - 15;
 let bullets = [];
 let balloons = [];
-let gameSpeed = /Android|iPhone/i.test(navigator.userAgent) ? 1.6 : 1; // Mobile slower
+let gameSpeed = /Android|iPhone/i.test(navigator.userAgent) ? 1.6 : 1; // Adjust speed for mobile
 
 // Balloon setup
 function createBalloon() {
