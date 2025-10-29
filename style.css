@@ -1,75 +1,81 @@
-/* Reset + fullscreen setup */
+/* Reset */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Prevent scrolling */
   background: #000;
-  touch-action: none; /* Block zoom & scroll during gameplay */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  touch-action: none; /* prevent scroll during game */
+  overflow: hidden;
 }
 
-/* Game canvas */
-#gameCanvas {
-  display: block;
+/* Game Box (fixed height) */
+#gameContainer {
+  position: relative;
   width: 100vw;
-  height: 100vh;
-  background: #222;
-  pointer-events: none; /* Canvas doesn't steal touch clicks */
+  height: 70vh; /* ✅ Box Area */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Top UI: Score + Restart */
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  background: #111;
+  pointer-events: none; /* fire button must work */
+}
+
+/* Score + Restart */
 #uiTop {
   position: absolute;
-  top: 10px;
+  top: 5px;
   width: 100%;
   text-align: center;
-  z-index: 100;
-  pointer-events: none; /* Non-interactive */
+  z-index: 20;
+  pointer-events: none;
 }
 
 #scoreText {
-  font-size: 5vw;
   color: #fff;
+  font-size: 4vw;
   font-weight: bold;
 }
 
 #restartBtn {
-  background: #ffcc00;
+  background: #ffc400;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 15px;
   margin-top: 10px;
-  font-size: 4vw;
   border-radius: 10px;
+  font-size: 4vw;
   cursor: pointer;
   display: none;
-  pointer-events: auto; /* Clickable */
-}
-
-/* Mobile-first control buttons */
-#controls {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  z-index: 100;
   pointer-events: auto;
 }
 
+/* Controls Row under the game box */
+#controls {
+  width: 100vw;
+  height: 30vh; /* ✅ Space for buttons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6vw;
+  background: #222;
+}
+
 #controls button {
-  width: 25vw;
-  height: 15vw;
+  width: 24vw;
+  height: 12vw;
+  font-size: 5vw;
   background: #444;
   color: #fff;
   border: none;
   border-radius: 12px;
-  font-size: 5vw;
-  font-weight: bold;
-  cursor: pointer;
-
-  /* Enable all touch presses */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
@@ -78,23 +84,19 @@ html, body {
   background: #666;
 }
 
-/* ✅ Desktop optimization */
+/* ✅ Desktop + Tablets */
 @media (min-width: 768px) {
   #scoreText {
-    font-size: 30px;
+    font-size: 26px;
   }
 
   #restartBtn {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   #controls button {
-    width: 120px;
-    height: 70px;
-    font-size: 22px;
-  }
-
-  #controls {
-    bottom: 40px;
+    width: 110px;
+    height: 60px;
+    font-size: 20px;
   }
 }
